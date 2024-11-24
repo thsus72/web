@@ -90,23 +90,52 @@ def signup_view(request):
     - 이메일 인증 코드 발송 및 검증 기능 포함.
     - 인증이 완료된 후 사용자 데이터를 데이터베이스에 저장.
     """
+    email_sent = False  # 이메일 인증 여부 플래그
     if request.method == 'POST':
-        # 사용자 입력
+        action = request.POST.get('action')  # 버튼 동작 확인
         username = request.POST.get('username')
         password = request.POST.get('password')
+        password_confirm = request.POST.get('password_confirm')
         email = request.POST.get('email')
         verification_code = request.POST.get('verification_code')
 
-        if email not in verification_code_storage:
+         # 이메일 인증 요청
+        if action == 'send_code':
+            # 비밀번호 확인 검증
+            if password != password_confirm:
+                messages.error(request, '비밀번호가 일치하지 않습니다.')
+                return render(request, 'accounts/signup.html', {
+                    'email_sent': False,
+                    'username': username,
+                    'password': password,
+                    'password_confirm': password_confirm,
+                    'email': email,
+                })
+
             # 이메일 인증 코드 발송
             send_verification_email(email)
-            messages.info(request, '입력하신 이메일로 인증 코드를 발송했습니다. 인증 후 다시 제출하세요.')
-            return render(request, 'accounts/signup.html', {'email': email})
+            email_sent = True
+            messages.info(request, '입력하신 이메일로 인증 코드를 발송했습니다.')
+            return render(request, 'accounts/signup.html', {
+                'email_sent': email_sent,
+                'username': username,
+                'password': password,
+                'password_confirm': password_confirm,
+                'email': email,
+            })
 
-        # 인증 코드 검증
-        if verification_code != verification_code_storage[email]:
-            messages.error(request, '인증 코드가 올바르지 않습니다.')
-            return render(request, 'accounts/signup.html', {'email': email})
+        # 회원가입 처리
+        if action == 'signup':
+            # 인증 코드 검증
+            if email not in verification_code_storage or verification_code != verification_code_storage[email]:
+                messages.error(request, '인증 코드가 올바르지 않습니다.')
+                return render(request, 'accounts/signup.html', {
+                    'email_sent': True,
+                    'username': username,
+                    'password': password,
+                    'password_confirm': password_confirm,
+                    'email': email,
+                })
 
         # 데이터 저장 로직
         try:
@@ -122,4 +151,4 @@ def signup_view(request):
             # 중복 데이터 오류 처리
             messages.error(request, '이미 존재하는 아이디 또는 이메일입니다.')
 
-    return render(request, 'accounts/signup.html')  # 회원가입 템플릿 렌더링
+    return render(request, 'accounts/signup.html', {'email_sent': email_sent})  # 회원가입 템플릿 렌더링

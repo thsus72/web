@@ -25,15 +25,24 @@
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="username" class="form-label">아이디</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="아이디를 입력하세요" required>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="아이디를 입력하세요" 
+                        value="{{ username }}" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">비밀번호</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" 
+                        value="{{ password }}" required>
+                </div>
+                <!-- 비밀번호 확인 입력 -->
+                <div class="mb-3">
+                    <label for="password_confirm" class="form-label">비밀번호 확인</label>
+                    <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="비밀번호를 다시 입력하세요" 
+                        value="{{ password_confirm }}" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">이메일</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요" required>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요"
+                    value="{{ email }}" required>
                 </div>
                 {% if email_sent %}
                 <div class="mb-3">
