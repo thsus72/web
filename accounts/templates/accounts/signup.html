@@ -35,7 +35,18 @@
                     <label for="email" class="form-label">이메일</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요" required>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">회원가입</button>
+                {% if email_sent %}
+                <div class="mb-3">
+                    <label for="verification_code" class="form-label">인증 코드</label>
+                    <input type="text" class="form-control" id="verification_code" name="verification_code" placeholder="인증 코드를 입력하세요" required>
+                </div>
+                {% endif %}
+                <div class="d-flex justify-content-between">
+                    <button type="submit" name="action" value="send_code" class="btn btn-secondary">이메일 인증 요청</button>
+                    {% if email_sent %}
+                    <button type="submit" name="action" value="signup" class="btn btn-primary">회원가입</button>
+                    {% endif %}
+                </div>
             </form>
             <div class="text-center mt-3">
                 <p>이미 계정이 있으신가요? <a href="/login/">로그인</a></p>

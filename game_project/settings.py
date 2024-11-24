@@ -123,3 +123,14 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'accounts/static')]
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+from decouple import config
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.naver.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # 환경 변수에서 가져옴
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # 환경 변수에서 가져옴
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
